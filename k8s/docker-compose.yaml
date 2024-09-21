@@ -1,0 +1,6 @@
+services:
+  processor:
+    build: .
+    image: my-sample-image:latest
+    mem_limit: 8G
+
