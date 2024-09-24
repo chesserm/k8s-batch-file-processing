@@ -20,12 +20,18 @@ To avoid kubernetes horizontally scaling infinitely, the driver script checks th
 
 1. Ensure Docker Desktop is running
 2. Start kubernetes (minikube) via `minikube start`
-3. Run the following to ensure you are on the same docker-env as minikube: `eval $(minikue docker-env)`
-4. Build the image: `cd k8s && docker-compose build`
-5. Ensure that `my-sample-image` is shown in the output of running the command `docker images`
-6. (Optional) Run the kubernetes dashboard to monitor the submission to jobs
-7. (Recommended) Change the value for `ttlSecondsAfterFinished` in the JSON request made by `submit_job()` in `send_request.py` to avoid kubernetes cleaning up pods immediately after they complete
-8. Run the following to submit jobs to kubernetes: `cd .. && python3 send_request.py -n 25`
+3. Register the "secrets" with kubernetes with:
+    ```
+    cd k8s
+    kubectl apply -f sample_secret1.yaml
+    kubectl apply -f sample_secret2.yaml
+    ```
+4. Run the following to ensure you are on the same docker-env as minikube: `eval $(minikube docker-env)`
+5. Build the image: `cd k8s && docker-compose build`
+6. Ensure that `my-sample-image` is shown in the output of running the command `docker images`
+7. (Optional) Run the kubernetes dashboard to monitor the submission to jobs
+8. (Recommended) Change the value for `ttlSecondsAfterFinished` in the JSON request made by `submit_job()` in `send_request.py` to avoid kubernetes cleaning up pods immediately after they complete
+9. Run the following to submit jobs to kubernetes: `cd .. && python3 send_request.py --num_jobs 25`
     - The `--num_jobs` flag is how many jobs to submit. Within `send_request.py` you have a `MAX_CONCURRENT_JOBS` param to adjust as desired.
 
 If you attempt to run the command multiple times, you will get an error that the job already exists, you can clean up jobs with: `kubectl delete jobs --all` to fix this. Likewise, if you change the `ttlSecondsAfterFinished` parameter (or remove it entirely), you can cleanup pods with: `kubectl delete pods --all`.

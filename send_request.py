@@ -28,7 +28,7 @@ def submit_job(job_name, image_name, queue_message):
         },
         "spec": {
             "backoffLimit": 0, # Don't retry on failure
-            "ttlSecondsAfterFinished": 1,  # Automatically delete pod 1 second after completion (default is to not cleanup)
+            # "ttlSecondsAfterFinished": 1,  # Automatically delete pod 1 second after completion (default is to not cleanup)
             "parallelism" : 1, # Use only one pod for this job
             "completions" : 1, # Only one successful completion (the one pod) needed for the job to be complete
             "template": {
@@ -40,7 +40,27 @@ def submit_job(job_name, image_name, queue_message):
                         "env": [{
                             "name": "QUEUE_MESSAGE",  # Name of the environment variable
                             "value": queue_message    # Value from the queue message
-                        }]
+                        },
+                        {
+                            "name" : "ABC_SECRET",
+                            "valueFrom" : {
+                                "secretKeyRef" : {
+                                    "name" : "abc-conn-str",
+                                    "key" : "abc"
+                                }
+                            }
+                        },
+                        {
+                            "name" : "DEF_SECRET",
+                            "valueFrom" : {
+                                "secretKeyRef" : {
+                                    "name" : "def-conn-str",
+                                    "key" : "def"
+                                }
+                            }
+                        }
+                        
+                        ]
                     }],
                     "restartPolicy": "Never", # Don't retry on failure
                     "imagePullPolicy" : "IfNotPresent"

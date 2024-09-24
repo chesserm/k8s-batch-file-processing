@@ -5,4 +5,4 @@ WORKDIR /app
 RUN apt-get update && apt-get upgrade -y 
 COPY ./src .
 
-CMD ["python", "mimic_process.py"]
+CMD ["python3", "mimic_process.py"]
